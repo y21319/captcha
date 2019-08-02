@@ -24,12 +24,12 @@
     
 
 '''
-from pytesseract import *
+import pytesseract
 from PIL import Image
 import os
 
 if __name__ == "__main__":
-    image = Image.open(r'D://note//2.png')
+    image = Image.open(r'/Users/yuanxiao/Downloads/1.png')
     image = image.convert('L')
     result = pytesseract.image_to_string(image,lang='eng', config='--psm 7 --oem 3 -c tessedit_char_whitelist=0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ')
     print(result)
