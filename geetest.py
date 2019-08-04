@@ -18,24 +18,26 @@ from selenium.webdriver import ActionChains
 import os
 
 import random
-
-ACCOUNT = 'asarja@163.com'
-PASSWORD = 'B_yx1011'
 THRESOLD = 60
 
 class CrackGeetest:
     
     #初始化
-    def __init__(self):
-        self.url = r'https://passport.bilibili.com/login'
+    def __init__(self, url, usernamei, passwordi, submit, submittype,userinfo, acc, pwd):
+        self.url = url
+        self.usernamei = usernamei
+        self.passwordi = passwordi
+        self.submit = submit
+        self.userinfo = userinfo
+        self.submittype = submittype
         options = webdriver.ChromeOptions()
         options.add_argument('User-Agent= Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36')
-        options.add_argument('--headless')
-        options.add_argument('--disable-gpu')
+        # options.add_argument('--headless')
+        # options.add_argument('--disable-gpu')
         self.browser = webdriver.Chrome(options=options)
         self.wait = WebDriverWait(self.browser, 20)
-        self.account = ACCOUNT
-        self.password = PASSWORD
+        self.account = acc
+        self.password = pwd
         self.browser.get(self.url)
 
     #获取验证码按钮
@@ -45,13 +47,18 @@ class CrackGeetest:
 
     #获取用户名密码
     def get_username_passwod(self):
-        username = self.wait.until(EC.presence_of_element_located((By.ID,'login-username')))
-        password = self.wait.until(EC.presence_of_element_located((By.ID,'login-passwd')))
+        username = self.wait.until(EC.presence_of_element_located((By.ID,self.usernamei)))
+        password = self.wait.until(EC.presence_of_element_located((By.ID,self.passwordi)))
         return username,password
     
     #获取登录提交按钮
     def get_submit(self):
-        button = self.wait.until(EC.element_to_be_clickable((By.CLASS_NAME,'btn-login')))
+        if self.submittype == 'class':
+            button = self.wait.until(EC.element_to_be_clickable((By.CLASS_NAME,self.submit)))
+        elif self.submittype == 'id':
+            button = self.wait.until(EC.element_to_be_clickable((By.ID,self.submit)))
+        else:
+            button = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR,self.submit)))
         return button
     
     def get_code_image(self,cls):
@@ -176,11 +183,12 @@ class CrackGeetest:
         username.send_keys(gc.account)
         password.clear()
         password.send_keys(gc.password)
-        userinfo = self.wait.until(EC.presence_of_element_located((By.CLASS_NAME,'nav-con')))
+        userinfo = self.wait.until(EC.presence_of_element_located((By.CLASS_NAME,self.userinfo)))
         print(userinfo.get_attribute('class'))
 
 if __name__ == "__main__":
-    gc = CrackGeetest()
+    # gc = CrackGeetest(r'https://passport.bilibili.com/login',r'login-username',r'login-passwd',r'btn-login',r'class',r'nav-con',r'******',r'******')
+    gc = CrackGeetest(r'http://www.gsxt.gov.cn/index.html',r'keyword',r'keyword',r'btn_query',r'id',r'main-layout',r'中国石油',r'中国石油')
     gc.login()
 
 
