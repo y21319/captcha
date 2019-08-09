@@ -2,7 +2,7 @@
 # -*- encoding:utf-8 -*-
 
 '''
-    极验拖拽严重码破解
+    极验拖拽验证码破解
 '''
 
 from selenium import webdriver
